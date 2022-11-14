@@ -1,0 +1,21 @@
+
+
+    if you want to use : as a regex delimiter in the address expression, you need to escape the : itself not the following e character
+
+    you have an unbalanced single quote
+
+So either
+
+sed "\:egrep:a alias cls='clear'" .bashrc
+
+or simply
+
+sed '\:egrep:a alias cls=clear' .bashrc
+
+since you don't really need to quote clear here (if you ever do need to embed a single quote in a single-quoted expression, close the quote and then reopen it i.e. '\'').
+
+To apply the changes to the file in-place, add the -i command line option.
+Share
+Edit
+Follow
+
