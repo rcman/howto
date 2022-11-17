@@ -1,10 +1,16 @@
 The firewall is blocking the connection. Firewall option requires a bundle ID, which the zabbix agent binary does not have. To fix this, add a few rules to the firewall (running on there mac where your agent is):
 # Open up a terminal window (Terminal can be found in the application folder or hit cmd-space and search for terminal)
+
 # Backup the configuration file for the firewall
+
 sudo cp -p /etc/pf.conf /etc/pf.conf.bak
+
 # Edit the configuration file
+
 sudo nano /etc/pf.conf
+
 # Add the following commands to the end of the firewall config file (where nnn.nnn.nnn.nnn is the ip address of your server, viz 192.168.1.102:
+
 block return in proto tcp from any to any port 10050
 block return in proto tcp from any to any port 10051
 pass in inet proto tcp from nnn.nnn.nnn.nnn to any port 10050 no state
