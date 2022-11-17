@@ -1,0 +1,44 @@
+The firewall is blocking the connection. Firewall option requires a bundle ID, which the zabbix agent binary does not have. To fix this, add a few rules to the firewall (running on there mac where your agent is):
+# Open up a terminal window (Terminal can be found in the application folder or hit cmd-space and search for terminal)
+# Backup the configuration file for the firewall
+sudo cp -p /etc/pf.conf /etc/pf.conf.bak
+# Edit the configuration file
+sudo nano /etc/pf.conf
+# Add the following commands to the end of the firewall config file (where nnn.nnn.nnn.nnn is the ip address of your server, viz 192.168.1.102:
+block return in proto tcp from any to any port 10050
+block return in proto tcp from any to any port 10051
+pass in inet proto tcp from nnn.nnn.nnn.nnn to any port 10050 no state
+pass in inet proto tcp from nnn.nnn.nnn.nnn to any port 10051 no state
+
+# Save the modified config file (control-x)
+
+# Load the updated config file:
+sudo pfctl -f /etc/pf.conf
+
+# launch the firewall
+sudo pfctl -E
+
+Your server should now be able to communicate with the zabbix agent running on your mac
+
+If you are still having problems, have a look at the zabbix_agentd.log file from the console app. If the firewall is not configured correctly, you will see something like:
+1574:20200910:053754.003 active check configuration update from [192.168.0.102:10051] started to fail (cannot connect to [[192.168.1.102]:10051]: [50] Network is down)
+
+You may need to restart you zibbix agent:
+
+sudo launchctl stop com.zabbix.zabbix_agentd
+sudo launchctl start com.zabbix.zabbix_agentd
+
+Your log file would now look something like:
+
+10169:20200910:115736.169 Starting Zabbix Agent [Zabbix server]. Zabbix 5.0.3 (revision {ZABBIX_REVISION}).
+10169:20200910:115736.175 **** Enabled features ****
+10169:20200910:115736.180 IPv6 support: YES
+10169:20200910:115736.185 TLS support: NO
+10169:20200910:115736.185 **************************
+10169:20200910:115736.186 using configuration file: /usr/local/etc/zabbix/zabbix_agentd.conf
+10169:20200910:115736.188 agent #0 started [main process]
+10188:20200910:115736.188 agent #1 started [collector]
+10189:20200910:115736.189 agent #2 started[listener #1]
+10190:20200910:115736.189 agent #3 started[listener #2]
+10191:20200910:115736.190 agent #4 started[listener #3]
+10192:20200910:115736.190 agent #5 started [active checks #1]
