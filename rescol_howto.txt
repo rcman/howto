@@ -1,0 +1,12 @@
+https://sleeplessbeastie.eu/2022/08/24/how-to-configure-persistent-dns-resolver/
+
+systemctl status systemd-resolved.service 
+
+sudo vim /etc/systemd/resolved.conf 
+
+sudo systemctl enable --now systemd-resolved.service
+
+systemctl status  systemd-resolved.service 
+resolvectl status
+
+
